@@ -2,6 +2,7 @@ import os
 import numpy as np
 import glob
 import pickle as pkl
+import json
 from sklearn import metrics
 
 class Evaluator():
@@ -11,6 +12,8 @@ class Evaluator():
             self.labels = self.load_taiwan_sa()
         elif self.args.test_dataset == "A3D":
             self.labels = self.load_A3D(label_file)
+        elif self.args.test_dataset == "DoTA":
+            self.labels = self.load_DoTA(label_file)
         else:
             raise NameError(self.args.test_dataset + " is unknown!")
 
@@ -30,6 +33,31 @@ class Evaluator():
             tmp_labels[-25:] = 1
             labels[video_name] = tmp_labels
             self.video_lengths[video_name] = 100
+        print(labels)
+        return labels
+    
+    def load_DoTA(self, label_dir):
+        '''
+        In taiwan dataset, all anomalies are the last 25 frames, so we don't load file. 
+        Instead we generate labels directory
+        '''
+        # all_videos = sorted(glob.glob(os.path.join(self.args.test_root,'*')))
+        all_videos = glob.glob(label_dir + '/*.json', recursive=True)
+        print("Number of testing videos: ", len(all_videos))
+        labels = {}
+        self.video_lengths = {}
+        for json_file in all_videos:
+            with open(json_file, encoding='utf-8') as f:
+                d = json.load(f)
+                video_name = d['video_name']
+                frame = d['num_frames']
+                tmp_labels = np.zeros(frame, dtype=int)
+                self.video_lengths[video_name] = frame
+                for label in d['labels']:
+                    if label['accident_id'] != 0:
+                        tmp_labels[label['frame_id']] = 1
+                labels[video_name] = tmp_labels                
+        # print(labels)
         return labels
     
     def load_A3D(self, label_file):
@@ -45,6 +73,8 @@ class Evaluator():
 
             labels[video_name] = value['target']
             self.video_lengths[video_name] = int(value['clip_end']) - int(value['clip_start']) + 1
+
+        print(labels)
         return labels
     
     @staticmethod
@@ -133,6 +163,7 @@ def compute_IOU(bbox_true, bbox_pred, format='xywh'):
     [cx, cy, w, h] or [x1, y1, x2, y2]
     '''
     if format == 'xywh':
+        # print(bbox_true, bbox_pred)
         xmin = np.max([bbox_true[0] - bbox_true[2]/2, bbox_pred[0] - bbox_pred[2]/2]) 
         xmax = np.min([bbox_true[0] + bbox_true[2]/2, bbox_pred[0] + bbox_pred[2]/2])
         ymin = np.max([bbox_true[1] - bbox_true[3]/2, bbox_pred[1] - bbox_pred[3]/2])

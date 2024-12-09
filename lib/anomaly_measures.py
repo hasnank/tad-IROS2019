@@ -85,9 +85,8 @@ def iou_metrics(all_pred_boxes_t,
         pred_boxes_t = all_pred_boxes_t[track_id]
         if len(pred_boxes_t) == 0:
             continue
-
         if multi_box == 'average':
-            pred_box_t = np.mean(pred_boxes_t, axis=0)#.view(1, 4)
+            pred_box_t = np.mean(pred_boxes_t.detach().numpy(), axis=0)#.view(1, 4)
         elif multi_box == 'union':
             _, pred_box_t = boxes_union(pred_boxes_t)
         elif multi_box == 'intersection':
@@ -179,7 +178,7 @@ def prediction_std(all_pred_boxes_t, normalize=False):
     score_of_all_objects = {}
     for track_id, pred_boxes_t in all_pred_boxes_t.items():
         if len(pred_boxes_t) > 0:
-            score = np.std(pred_boxes_t, axis=0)
+            score = np.std(pred_boxes_t.detach().numpy(), axis=0)
             if normalize:
                 scale = np.mean(pred_boxes_t[:,2:], axis=0)
                 W = scale[0]

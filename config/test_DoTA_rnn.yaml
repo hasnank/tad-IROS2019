@@ -6,17 +6,17 @@ checkpoint_dir: "checkpoints/fol_ego_checkpoints"
 # Directories arguments for running on Anomaly Detection videos only
 # best_fol_model: 'checkpoints/fol_ego_checkpoints/fol_ego_0.5sec/fol_epoch_078_loss_0.0013.pt'
 # best_ego_pred_model: "/home/brianyao/Documents/stad2019iros-pytorch/checkpoints/ego_pred_checkpoints/epoch_080_loss_0.001.pt"
-best_fol_model: 'checkpoints/fol_ego_checkpoints/fol_epoch_069_loss_0.0111.pt'
-best_ego_pred_model: 'checkpoints/ego_pred_checkpoints/epoch_099_loss_0.0012.pt'
+best_fol_model: 'checkpoints/fol_ego_checkpoints_rnn/fol_epoch_054_loss_0.0127.pt'
+best_ego_pred_model: 'checkpoints/ego_pred_checkpoints_rnn/epoch_099_loss_0.0012.pt'
 
-test_dataset: "A3D" 
-label_file: 'datasets/A3D_labels.pkl'
+test_dataset: "DoTA" 
+label_file: 'datasets/DoTA/annotations'
 
-track_dir: "/media/DATA/A3D/deep_sort_clear"
-flow_dir: "/media/DATA/A3D/flownet2"
-ego_motion_dir: "/media/DATA/A3D/ego_motion"
-img_dir: "/media/DATA/A3D/frames"
-save_dir: "/media/DATA/A3D/fvl_ego_results"
+track_dir: "datasets/DoTA/frames/det"
+flow_dir: "datasets/DoTA/flownet2"
+ego_motion_dir: "datasets/DoTA/ego_motion"
+img_dir: "datasets/DoTA/frames"
+save_dir: "datasets/DoTA/fvl_ego_results_rnn"
 
 # dataset arguments
 seed_max: 5

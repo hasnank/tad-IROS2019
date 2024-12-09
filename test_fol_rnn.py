@@ -10,7 +10,7 @@ from torch.utils import data
 from torchsummaryX import summary
 
 from lib.utils.train_val_utils import val_fol_ego
-from lib.models.rnn_ed import FolRNNED, EgoRNNED
+from lib.models.rnn_ed_rnn import FolRNNED, EgoRNNED
 from lib.utils.fol_dataloader import HEVIDataset
 from config.config import * 
 from lib.models.trackers import EgoTracker, AllTrackers

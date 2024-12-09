@@ -10,8 +10,8 @@ from torch.utils import data
 from torchsummaryX import summary
 
 from lib.utils.train_val_utils import train_ego_pred, val_ego_pred
-from lib.models.rnn_ed import EgoRNNED
-from lib.utils.fvl_dataloader import HEVIEgoDataset
+from lib.models.rnn_ed_lstm import EgoRNNED
+from lib.utils.fol_dataloader import HEVIEgoDataset
 from config.config import * 
 
 from tensorboardX import SummaryWriter
@@ -42,7 +42,7 @@ val_gen = data.DataLoader(val_set, **dataloader_params)
 print("Number of validation samples:", val_set.__len__())
 
 # print model summary
-summary(model, torch.zeros(1, args.segment_len, 3).to(device))
+# summary(model, torch.zeros(1, args.segment_len, 3).to(device))
 
 # summary writer
 writer = SummaryWriter('summary/ego_pred/exp-1')

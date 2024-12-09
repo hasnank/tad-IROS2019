@@ -32,7 +32,7 @@ from torch.utils import data
 from config.config import * 
 
 from lib.utils.fol_dataloader import HEVIDataset
-from lib.models.rnn_ed import FolRNNED, EgoRNNED
+from lib.models.rnn_ed_rnn import FolRNNED, EgoRNNED
 from lib.models.trackers import Tracker, AllTrackers, EgoTracker 
 from lib.models.trackers import bbox_loss
 

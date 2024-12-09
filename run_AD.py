@@ -31,45 +31,51 @@ def main(args):
 
 
     for file_idx, fol_ego_file in enumerate(all_files):
-        video_name = fol_ego_file.split('/')[-1].split('.')[0]
-        video_len = evaluator.video_lengths[video_name]
-        '''save anomaly scores in dictionary'''
-        all_mean_iou_anomaly_scores[video_name] = np.zeros(video_len)
-        all_min_iou_anomaly_scores[video_name] = np.zeros(video_len)
-        all_ego_anomaly_scores[video_name] = np.zeros(video_len)
-        all_mask_anomaly_scores[video_name] = np.zeros(video_len)
-        all_pred_std_mean_anomaly_scores[video_name] = np.zeros(video_len)
-        all_pred_std_max_anomaly_scores[video_name] = np.zeros(video_len)
-        
-        fol_ego_data = pkl.load(open(fol_ego_file,'rb'))
-        for frame in fol_ego_data:
-            '''compute iou metrics'''
-            L_bbox = iou_metrics(frame['bbox_pred'], 
-                                frame['bbox_gt'],
-                                multi_box='average', 
-                                iou_type='average')
-            all_mean_iou_anomaly_scores[video_name][frame['frame_id']] = L_bbox
+        try:
+            video_name = fol_ego_file.split('\\')[-1].split('.')[0]
+            video_len = evaluator.video_lengths[video_name]
+            '''save anomaly scores in dictionary'''
+            all_mean_iou_anomaly_scores[video_name] = np.zeros(video_len)
+            all_min_iou_anomaly_scores[video_name] = np.zeros(video_len)
+            all_ego_anomaly_scores[video_name] = np.zeros(video_len)
+            all_mask_anomaly_scores[video_name] = np.zeros(video_len)
+            all_pred_std_mean_anomaly_scores[video_name] = np.zeros(video_len)
+            all_pred_std_max_anomaly_scores[video_name] = np.zeros(video_len)
             
-            L_Mask, pred_mask, observed_mask = mask_iou_metrics(frame['bbox_pred'], 
-                                                                frame['bbox_gt'], 
-                                                                args.W, args.H, 
-                                                                multi_box='latest')
-            all_mask_anomaly_scores[video_name][frame['frame_id']] = L_Mask
-            
-            L_bbox = iou_metrics(frame['bbox_pred'], 
-                                frame['bbox_gt'],
-                                multi_box='average', 
-                                iou_type='min')
-            all_min_iou_anomaly_scores[video_name][frame['frame_id']] = L_bbox    
-            
-            
-            L_pred_bbox_mean, L_pred_bbox_max, anomalous_object, _ = prediction_std(frame['bbox_pred'])
-            all_pred_std_mean_anomaly_scores[video_name][frame['frame_id']] = L_pred_bbox_mean
-            all_pred_std_max_anomaly_scores[video_name][frame['frame_id']] = L_pred_bbox_max
-            
-        if file_idx % 10 == 0:
-            print(file_idx)
-    
+            fol_ego_data = pkl.load(open(fol_ego_file,'rb'))
+            # print(evaluator.video_lengths)
+            for frame in fol_ego_data:
+                '''compute iou metrics'''
+                L_bbox = iou_metrics(frame['bbox_pred'], 
+                                    frame['bbox_gt'],
+                                    multi_box='average', 
+                                    iou_type='average')
+                # print(frame['frame_id'])
+                all_mean_iou_anomaly_scores[video_name][frame['frame_id']] = L_bbox
+                
+                L_Mask, pred_mask, observed_mask = mask_iou_metrics(frame['bbox_pred'], 
+                                                                    frame['bbox_gt'], 
+                                                                    args.W, args.H, 
+                                                                    multi_box='latest')
+                all_mask_anomaly_scores[video_name][frame['frame_id']] = L_Mask
+                
+                L_bbox = iou_metrics(frame['bbox_pred'], 
+                                    frame['bbox_gt'],
+                                    multi_box='average', 
+                                    iou_type='min')
+                all_min_iou_anomaly_scores[video_name][frame['frame_id']] = L_bbox    
+                
+                
+                L_pred_bbox_mean, L_pred_bbox_max, anomalous_object, _ = prediction_std(frame['bbox_pred'])
+                all_pred_std_mean_anomaly_scores[video_name][frame['frame_id']] = L_pred_bbox_mean
+                all_pred_std_max_anomaly_scores[video_name][frame['frame_id']] = L_pred_bbox_max
+                
+            if file_idx % 10 == 0:
+                print(file_idx)
+        except Exception:
+            print(f"error {fol_ego_file}")
+            continue
+
     auc, fpr, tpr = Evaluator.compute_AUC(all_mean_iou_anomaly_scores, evaluator.labels)
     print("FVL MEAN IOU AUC: ", auc)
     auc, fpr, tpr = Evaluator.compute_AUC(all_mask_anomaly_scores, evaluator.labels)
