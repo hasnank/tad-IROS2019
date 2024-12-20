@@ -1,0 +1,9 @@
+numpy==1.21.6
+torch==1.13.1
+tensorboardX==2.6.2.2
+torchsummaryX
+tqdm
+pyyaml
+scikit-learn
+opencv-python
+matplotlib

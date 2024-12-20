@@ -9,11 +9,13 @@ from sklearn import metrics
 from lib.anomaly_measures import *
 from lib.utils.eval_utils import Evaluator
 import matplotlib.pyplot as plt
+import time
 
 import copy
 from config.config import parse_args, visualize_config
 import pdb
 def main(args):
+    start = time.time()
     # load data
     all_files = sorted(glob.glob(os.path.join(args.save_dir, '*.pkl')))
     print("Number of videos: ", len(all_files))
@@ -75,7 +77,7 @@ def main(args):
         except Exception:
             print(f"error {fol_ego_file}")
             continue
-
+    
     auc, fpr, tpr = Evaluator.compute_AUC(all_mean_iou_anomaly_scores, evaluator.labels)
     print("FVL MEAN IOU AUC: ", auc)
     auc, fpr, tpr = Evaluator.compute_AUC(all_mask_anomaly_scores, evaluator.labels)
@@ -86,6 +88,9 @@ def main(args):
     print("FVL PRED STD MEAN AUC: ", auc)
     auc, fpr, tpr = Evaluator.compute_AUC(all_pred_std_max_anomaly_scores, evaluator.labels)
     print("FVL PRED STD MAX AUC: ", auc)
+
+    elipse = time.time() - start
+    print("Elipse: ", elipse)
 
 if __name__=='__main__':
     args = parse_args()

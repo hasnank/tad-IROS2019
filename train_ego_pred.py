@@ -10,7 +10,7 @@ from torch.utils import data
 from torchsummaryX import summary
 
 from lib.utils.train_val_utils import train_ego_pred, val_ego_pred
-from lib.models.rnn_ed_lstm import EgoRNNED
+from lib.models.rnn_ed import EgoRNNED
 from lib.utils.fol_dataloader import HEVIEgoDataset
 from config.config import * 
 

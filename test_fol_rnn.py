@@ -32,6 +32,7 @@ def test_fol_ego(fol_model, ego_pred_model, test_gen):
     Returns:
         
     '''
+    start = time.time()
     fol_model.eval() # Sets the module in training mode.
     ego_pred_model.eval()
 
@@ -84,6 +85,9 @@ def test_fol_ego(fol_model, ego_pred_model, test_gen):
     FDE /= len(test_gen.dataset)
     FIOU /= len(test_gen.dataset)
     print("FDE: %4f;    ADE: %4f;   FIOU: %4f" % (FDE, ADE, FIOU))
+
+    elipse = time.time() - start
+    print("Elipse: ", elipse)
 
 def main(args):
     # initialize model

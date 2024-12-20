@@ -32,6 +32,7 @@ def test_fol_ego(fol_model, ego_pred_model, test_gen):
     Returns:
         
     '''
+    start = time.time()
     fol_model.eval() # Sets the module in training mode.
     ego_pred_model.eval()
 
@@ -84,6 +85,9 @@ def test_fol_ego(fol_model, ego_pred_model, test_gen):
     FDE /= len(test_gen.dataset)
     FIOU /= len(test_gen.dataset)
     print("FDE: %4f;    ADE: %4f;   FIOU: %4f" % (FDE, ADE, FIOU))
+    
+    elipse = time.time() - start
+    print("Elipse: ", elipse)
 
 def main(args):
     # initialize model
@@ -111,7 +115,7 @@ def main(args):
     input_bbox, input_flow, input_ego_motion, target_bbox, target_ego_motion = test_set.__getitem__(1)
     print("input shape: ", input_bbox.shape)
     print("target shape: ", target_bbox.shape)
-
+    # print(test_set)
     test_fol_ego(fol_model, ego_pred_model, test_gen)
 
 
